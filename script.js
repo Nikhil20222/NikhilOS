@@ -482,6 +482,7 @@ function buildAbout(body) {
         <div class="spec-card"><div class="spec-label">UI</div><div class="spec-val">NikhilDE 1.0</div></div>
         <div class="spec-card"><div class="spec-label">Memory</div><div class="spec-val">Unlimited ∞</div></div>
         <div class="spec-card"><div class="spec-label">Theme</div><div class="spec-val">Dark Purple</div></div>
+        <div class="spec-card"><div class="spec-label">Made by</div><div class="spec-val">Built by Nikhil for Hack Club WebOS Mission</div></div>
       </div>
     </div>`;
 }
