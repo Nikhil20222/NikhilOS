@@ -13,6 +13,7 @@ const apps = {
   calc:     { title:'Calculator', icon:'🔢', w:300, h:420, build: buildCalc },
   settings: { title:'Settings', icon:'⚙️', w:480, h:400, build: buildSettings },
   about:    { title:'About NikhilOS', icon:'💻', w:440, h:400, build: buildAbout },
+  ai: { title:'NikhilAI', icon:'🤖', w:420, h:520, build: buildAI },
 };
 
 // ── OPEN / CLOSE WINDOW ──
@@ -296,7 +297,7 @@ function buildEditor(body) {
 NikhilOS Text Editor — Ctrl+A to select all, Ctrl+S to save (use save button)"></textarea>`;
 }
 
-// BROWSER
+// Browser
 function buildBrowser(body) {
   body.style.display = 'flex'; body.style.flexDirection = 'column';
   body.innerHTML = `
@@ -490,3 +491,99 @@ function buildAbout(body) {
 
 showNotif('Welcome!', 'NikhilOS booted successfully 🚀', 'success');
 setTimeout(() => showNotif('Tip', 'Double-click icons or right-click desktop to open apps!'), 1500);
+
+function buildAI(body) {
+  const responses = {
+    greet:     ['Hey! 👋 Main NikhilAI hoon. Kya help chahiye?', 'Namaste! 🙏 Kya puchna tha?', 'Hello! Bolo!'],
+    name:      ['Main NikhilAI hoon — Nikhil ne banaya hai mujhe! 🤖', 'Mera naam NikhilAI hai, NikhilOS ka dil. 💜'],
+    jee:       ['JEE prep? 💪 Physics mein mechanics, Chemistry mein organic, Maths mein calculus — yahi highest weightage!', 'Consistent raho — roz 6-8 ghante focused study. All the best! 🔥', 'Pehle NCERT strong karo, phir HC Verma aur RD Sharma!'],
+    physics:   ['HC Verma best hai Physics ke liye! Concepts pehle, numericals baad mein. ⚡', 'Newton laws, thermodynamics, electromagnetism — JEE ke liye must!'],
+    chemistry: ['Organic mein named reactions yaad karo! 🧪', 'Physical: N Avasthi. Organic: MS Chouhan. Inorganic: NCERT hi kaafi!'],
+    maths:     ['Calculus + Coordinate Geometry = 40% questions! 📐', 'RD Sharma se basics, phir Cengage se practice. Daily integration karo!'],
+    hackclub:  ['Hack Club bohot cool hai! 🎉 Projects banao, stardust kamao!', 'WebOS mission complete karo — 50 stardust + sticker milega! 🏆'],
+    os:        ['NikhilOS pure HTML CSS JS se bana hai — koi framework nahi! 😎', 'Yeh OS Hack Club WebOS 1 mission ke liye banaya gaya hai!'],
+    time:      [`Abhi time: ${new Date().toLocaleTimeString()} ⏰`],
+    date:      [`Aaj: ${new Date().toLocaleDateString('en-IN',{weekday:'long',year:'numeric',month:'long',day:'numeric'})} 📅`],
+    joke:      ['Programmer coffee kyun peeta hai? Kyunki bina coffee ke Java nahi hoti! ☕😂', 'Bug kya hota hai? Woh feature jo document nahi hua! 😅', 'CSS = Crying Suffering Sadness 😭💀'],
+    thanks:    ['Koi baat nahi! 😊', 'Anytime bhai! 🤜🤛', 'Khushi hui help karke!'],
+    bye:       ['Alvida! 👋', 'Bye! All the best JEE ke liye! 💪', 'See you bhai! 🙏'],
+    love:      ['Aww thanks! 💜', 'Love you too bhai! 🤖❤️'],
+    default:   ['Hmm interesting! 🤔 Thoda aur detail mein bata?', 'Yeh mujhe zyada pata nahi 😅', 'Google pe search karo — woh sab jaanta hai 😄', 'Acha sawaal! Main soch raha hoon... just kidding, main AI hoon 😂'],
+  };
+
+  function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+
+  function getReply(msg) {
+    const m = msg.toLowerCase();
+    if (/^(hi|hello|hey|hii|namaste|hy|sup)/.test(m)) return pick(responses.greet);
+    if (/tera naam|your name|kaun hai|who are you/.test(m))  return pick(responses.name);
+    if (/jee|iit|entrance|exam/.test(m))       return pick(responses.jee);
+    if (/physics/.test(m))                      return pick(responses.physics);
+    if (/chemistry|organic/.test(m))            return pick(responses.chemistry);
+    if (/math|calculus|algebra/.test(m))        return pick(responses.maths);
+    if (/hack club|hackclub|stardust/.test(m))  return pick(responses.hackclub);
+    if (/nikhilos|webos/.test(m))               return pick(responses.os);
+    if (/time|samay|baj/.test(m))               return pick(responses.time);
+    if (/date|aaj|today|tarikh/.test(m))        return pick(responses.date);
+    if (/joke|funny|hasao/.test(m))             return pick(responses.joke);
+    if (/thank|shukriya/.test(m))               return pick(responses.thanks);
+    if (/bye|alvida|chal/.test(m))              return pick(responses.bye);
+    if (/love|pyaar/.test(m))                   return pick(responses.love);
+    return pick(responses.default);
+  }
+
+  let chatHistory = [];
+
+  function addMsg(text, from) {
+    chatHistory.push({text, from});
+    renderChat();
+  }
+
+  function renderChat() {
+    const msgs = body.querySelector('.chat-messages');
+    msgs.innerHTML = chatHistory.map(m => `
+      <div class="chat-msg ${m.from}">
+        <div class="chat-avatar">${m.from === 'bot' ? '🤖' : '👤'}</div>
+        <div class="chat-bubble">${m.text}</div>
+      </div>`).join('');
+    msgs.scrollTop = msgs.scrollHeight;
+  }
+
+  function sendMsg(text) {
+    if (!text.trim()) return;
+    addMsg(text, 'user');
+    const inp = body.querySelector('.chat-input');
+    if (inp) inp.value = '';
+    const msgs = body.querySelector('.chat-messages');
+    const typing = document.createElement('div');
+    typing.className = 'chat-msg bot';
+    typing.innerHTML = `<div class="chat-avatar">🤖</div><div class="chat-bubble"><div class="chat-typing"><span></span><span></span><span></span></div></div>`;
+    msgs.appendChild(typing);
+    msgs.scrollTop = msgs.scrollHeight;
+    setTimeout(() => { typing.remove(); addMsg(getReply(text), 'bot'); }, 800 + Math.random() * 500);
+  }
+
+  const suggestions = ['JEE tips 📚', 'Ek joke sunao 😂', 'Time kya hai? ⏰', 'NikhilOS kya hai? 💻'];
+
+  body.innerHTML = `
+    <div class="chat-body">
+      <div class="chat-messages"></div>
+      <div class="chat-suggestions">
+        ${suggestions.map(s => `<div class="chat-sug">${s}</div>`).join('')}
+      </div>
+      <div class="chat-input-row">
+        <input class="chat-input" type="text" placeholder="Kuch bhi puchho..." />
+        <button class="chat-send">➤</button>
+      </div>
+    </div>`;
+
+  body.querySelectorAll('.chat-sug').forEach(btn => {
+    btn.onclick = () => sendMsg(btn.textContent);
+  });
+
+  const input = body.querySelector('.chat-input');
+  body.querySelector('.chat-send').onclick = () => sendMsg(input.value);
+  input.addEventListener('keydown', e => { if (e.key === 'Enter') sendMsg(input.value); });
+
+  setTimeout(() => addMsg('Hey! 👋 Main NikhilAI hoon — tumhara personal assistant. JEE, jokes, sab puchh sakte ho!', 'bot'), 400);
+}
