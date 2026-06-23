@@ -13,6 +13,7 @@ NikhilOS is a browser-based operating system inspired by modern desktop environm
 * Browser-style interface
 * Glassmorphism inspired UI
 * Live clock
+* NikhilChatbot
 
 ## Technologies Used
 
