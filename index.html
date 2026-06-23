@@ -13,6 +13,10 @@
           <div class="icon-img">🖥️</div>
           <span>Terminal</span>
         </div>
+        <div class="desk-icon" ondblclick="openApp('ai')">
+          <div class="icon-img">🤖</div>
+          <span>NikhilAI</span>
+        </div>
         <div class="desk-icon" ondblclick="openApp('files')">
           <div class="icon-img">📁</div>
           <span>Files</span>
@@ -43,6 +47,8 @@
         </div>
       </div>
     </div>
+    <!-- LAYOUT -->
+    <!-- Date 10/06/2026 -->
 
     <!-- TASKBAR -->
     <div id="taskbar">
@@ -73,6 +79,15 @@
           "
         >
           <span class="sm-icon">🖥️</span>Terminal
+        </div>
+        <div
+          class="sm-item"
+          onclick="
+            openApp('ai');
+            closeStartMenu();
+          "
+        >
+          <span class="sm-icon">🤖</span>NikhilAI
         </div>
         <div
           class="sm-item"
